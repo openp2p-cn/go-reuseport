@@ -1,4 +1,4 @@
-module github.com/libp2p/go-reuseport
+module go-reuseport
 
 go 1.17
 
