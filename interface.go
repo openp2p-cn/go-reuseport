@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"time"
 )
 
 // Available returns whether or not SO_REUSEPORT or equivalent behaviour is
@@ -58,6 +59,19 @@ func Dial(network, laddr, raddr string) (net.Conn, error) {
 	d := net.Dialer{
 		Control:   Control,
 		LocalAddr: nla,
+	}
+	return d.Dial(network, raddr)
+}
+
+func DialTimeout(network, laddr, raddr string, timeout time.Duration) (net.Conn, error) {
+	nla, err := ResolveAddr(network, laddr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve local addr: %w", err)
+	}
+	d := net.Dialer{
+		Control:   Control,
+		LocalAddr: nla,
+		Timeout:   timeout,
 	}
 	return d.Dial(network, raddr)
 }
